@@ -1,0 +1,8 @@
+﻿Popis:Rybáři (2D pole a Random)
+Termín: 22. duben 2021 23:59
+Pokyny:
+
+Ve virtuálním lovišti o rozměrech 1x1 km se vyskytuje 100 000 ryb a jsou v lovišti náhodně rozděleny. Napište program, který:
+
+1. Vygeneruje virtuální loviště s náhodným rozmístěním ryb. Velikost kontrolní oblasti zvolte 10 x 10m.
+2. Vypíše místo, kam by měl rybář hodit síť o velikosti 30 x 30m, aby dosáhl maximálního úlovku.
