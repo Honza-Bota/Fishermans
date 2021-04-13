@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace Fishermans
 {
@@ -13,15 +14,15 @@ namespace Fishermans
         static Lake lake;
         static int size = 1_000;
         static int fishCount = 100_000;
+        static string fileName = "test";
 
         static void Main(string[] args)
         {
             rnd = new Random();
             lake = new Lake(size);
 
-            lake.Fill(rnd, fishCount);
-
-            Console.WriteLine( lake.GetMap() );
+            Console.WriteLine( lake.Fill(rnd, fishCount) );
+            lake.GetBitmap(fileName);
             Console.WriteLine( lake.GetPosition() );
 
             Console.Read();
@@ -71,9 +72,34 @@ namespace Fishermans
 
         public string GetMap()
         {
-            //kód pro vykreslení jezera
+            string map = "";
 
-            return "";
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    map += Fields[i, j] ? "1" : "0";
+                }
+                map += Environment.NewLine;
+            }
+
+            return map;
+        }
+
+        public Bitmap GetBitmap(string fileName = null)
+        {
+            Bitmap b = new Bitmap(Size, Size);
+            
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    b.SetPixel(i, j, Fields[i, j] ? Color.Red : Color.Blue);
+                }
+            }
+
+            if(fileName != null) b.Save(fileName + ".bmp");
+            return b;
         }
     }
 }
