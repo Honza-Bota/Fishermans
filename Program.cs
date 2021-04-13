@@ -29,7 +29,8 @@ namespace Fishermans
             lake.GetBitmap(fileName);
 
             int count;
-            Console.WriteLine("Optimální souřadnice: " + lake.GetPosition(out count) );
+            Point position = lake.GetPosition(out count);
+            Console.WriteLine("Optimální souřadnice: " + position );
             Console.WriteLine("Výskyt ryb ve výběru: " + count);
 
             Console.ReadLine();
@@ -72,26 +73,24 @@ namespace Fishermans
             int count = 0;
             Dictionary<Point, int> vyskyty = new Dictionary<Point, int>();
 
-            for (int height = 0; height < Fields.GetLength(0); height++)
+            for (int height = 0; height < Fields.GetLength(0) - netSize; height++)
             {
-                for (int width = 0; width < Fields.GetLength(1); width++)
+                for (int width = 0; width < Fields.GetLength(1) - netSize; width++)
                 {
-                    for (int y = height; y < netSize; y++)
+                    for (int i = height; i < netSize + height; i++)
                     {
-                        for (int x = width; x < netSize; x++)
+                        for (int j = width; j < netSize + width; j++)
                         {
-                            if (Fields[x, y]) count++;
+                            if (Fields[i, j]) count++;
                         }
                     }
-                    vyskyty.Add(new Point(width, height), count);
+                    vyskyty.Add(new Point(height, width), count);
                     count = 0;
-                } 
+                }
             }
 
             pocet = vyskyty.Values.Max();
-
             Point positionOfMax = vyskyty.FirstOrDefault(x => x.Value == vyskyty.Values.Max()).Key;
-
             return positionOfMax;
         }
 
