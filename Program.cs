@@ -49,20 +49,17 @@ namespace Fishermans
 
         public bool Fill(Random rnd, int fishCount = 100_000)
         {
-            int x = rnd.Next(Size);
-            int y = rnd.Next(Size);
+            Point location = new Point(rnd.Next(Size), rnd.Next(Size));
             Stopwatch s = new Stopwatch();
 
             s.Start();
             for (int i = 0; i < fishCount; i++)
             {
-                while (Fields[x, y] == true)
+                while (Fields[location.X, location.Y] == true)
                 {
-                    x = rnd.Next(Size);
-                    y = rnd.Next(Size);
+                    location = new Point(rnd.Next(Size), rnd.Next(Size));
                 }
-
-                Fields[x, y] = true;
+                Fields[location.X, location.Y] = true;
             }
             s.Stop();
 
@@ -75,20 +72,20 @@ namespace Fishermans
             int count = 0;
             Dictionary<Point, int> vyskyty = new Dictionary<Point, int>();
 
-            for (int i = 0; i < Fields.GetLength(0) - netSize; i++)
+            for (int height = 0; height < Fields.GetLength(0); height++)
             {
-                for (int j = 0; j < Fields.GetLength(1) - netSize; j++)
+                for (int width = 0; width < Fields.GetLength(1); width++)
                 {
-                    for (int x = i; x <= netSize; x++)
+                    for (int y = height; y < netSize; y++)
                     {
-                        for (int y = j; y <= netSize; y++)
+                        for (int x = width; x < netSize; x++)
                         {
                             if (Fields[x, y]) count++;
                         }
                     }
-                    vyskyty.Add(new Point(i, j), count);
+                    vyskyty.Add(new Point(width, height), count);
                     count = 0;
-                }
+                } 
             }
 
             pocet = vyskyty.Values.Max();
