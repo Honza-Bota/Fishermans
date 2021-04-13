@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace Fishermans
 {
@@ -22,12 +23,14 @@ namespace Fishermans
             rnd = new Random();
             lake = new Lake(size);
 
-            Console.WriteLine( lake.Fill(rnd, fishCount) );
+            Console.WriteLine(lake.Fill(rnd, fishCount) ? "Pole naplněno." : "Pole nenaplněno.");
 
             lake.GetMap(fileName);
             lake.GetBitmap(fileName);
 
-            Console.WriteLine( lake.GetPosition() );
+            int count;
+            Console.WriteLine("Optimální souřadnice: " + lake.GetPosition(out count) );
+            Console.WriteLine("Výskyt ryb ve výběru: " + count);
 
             Console.ReadLine();
         }
@@ -67,11 +70,32 @@ namespace Fishermans
             return true;
         }
 
-        public Point GetPosition(int size = 30)
+        public Point GetPosition(out int pocet, int netSize = 30)
         {
-            //kód pro nalezení optimálních souřadnic
+            int count = 0;
+            Dictionary<Point, int> vyskyty = new Dictionary<Point, int>();
 
-            return new Point(0,0);
+            for (int i = 0; i < Fields.GetLength(0) - netSize; i++)
+            {
+                for (int j = 0; j < Fields.GetLength(1) - netSize; j++)
+                {
+                    for (int x = i; x <= netSize; x++)
+                    {
+                        for (int y = j; y <= netSize; y++)
+                        {
+                            if (Fields[x, y]) count++;
+                        }
+                    }
+                    vyskyty.Add(new Point(i, j), count);
+                    count = 0;
+                }
+            }
+
+            pocet = vyskyty.Values.Max();
+
+            Point positionOfMax = vyskyty.FirstOrDefault(x => x.Value == vyskyty.Values.Max()).Key;
+
+            return positionOfMax;
         }
 
         public string GetMap(string fileName = null)
