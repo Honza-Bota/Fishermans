@@ -32,6 +32,7 @@ namespace Fishermans
             Point position = lake.GetPosition(out count);
             Console.WriteLine("Optimální souřadnice: " + position );
             Console.WriteLine("Výskyt ryb ve výběru: " + count);
+            lake.DrawArea(position, "area");
 
             Console.ReadLine();
         }
@@ -72,7 +73,9 @@ namespace Fishermans
         {
             int count = 0;
             Dictionary<Point, int> vyskyty = new Dictionary<Point, int>();
+            Stopwatch s = new Stopwatch();
 
+            s.Start();
             for (int height = 0; height < Fields.GetLength(0) - netSize; height++)
             {
                 for (int width = 0; width < Fields.GetLength(1) - netSize; width++)
@@ -88,9 +91,15 @@ namespace Fishermans
                     count = 0;
                 }
             }
+            s.Stop();
+            Debug.WriteLine("Čas potřebný pro nalezení ideální polohy: " + s.ElapsedMilliseconds + " ms");
 
+            s.Restart();
             pocet = vyskyty.Values.Max();
             Point positionOfMax = vyskyty.FirstOrDefault(x => x.Value == vyskyty.Values.Max()).Key;
+            s.Stop();
+            Debug.WriteLine("Čas potřebný pro zjištění ideální polohy: " + s.ElapsedMilliseconds + " ms");
+
             return positionOfMax;
         }
 
@@ -124,6 +133,26 @@ namespace Fishermans
             }
 
             if(fileName != null) b.Save(fileName + ".bmp");
+            return b;
+        }
+
+        public Bitmap DrawArea(Point position, string fileName = null, int areaSize = 30)
+        {
+            Bitmap b = GetBitmap();
+            for (int i = 0; i <= areaSize; i++)
+            {
+                //b.SetPixel(position.X + i, position.Y, b.GetPixel(position.X + i, position.Y) == Color.Red ? Color.Red : Color.Green);
+                //b.SetPixel(position.X, position.Y + i, b.GetPixel(position.X, position.Y + i) == Color.Red ? Color.Red : Color.Green);
+                //b.SetPixel(position.X + i, position.Y + areaSize, b.GetPixel(position.X + i, position.Y + areaSize) == Color.Red ? Color.Red : Color.Green);
+                //b.SetPixel(position.X + areaSize, position.Y + i, b.GetPixel(position.X + areaSize, position.Y + i) == Color.Red ? Color.Red : Color.Green);
+
+                b.SetPixel(position.X + i, position.Y, Color.Green);
+                b.SetPixel(position.X, position.Y + i, Color.Green);
+                b.SetPixel(position.X + i, position.Y + areaSize, Color.Green);
+                b.SetPixel(position.X + areaSize, position.Y + i, Color.Green);
+            }
+        
+            if (fileName != null) b.Save(fileName + ".bmp");
             return b;
         }
     }
