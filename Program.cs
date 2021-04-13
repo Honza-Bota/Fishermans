@@ -96,7 +96,8 @@ namespace Fishermans
 
             s.Restart();
             pocet = vyskyty.Values.Max();
-            Point positionOfMax = vyskyty.FirstOrDefault(x => x.Value == vyskyty.Values.Max()).Key;
+            //Point positionOfMax = vyskyty.FirstOrDefault(x => x.Value == vyskyty.Values.Max()).Key;
+            Point positionOfMax = vyskyty.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
             s.Stop();
             Debug.WriteLine("Čas potřebný pro zjištění ideální polohy: " + s.ElapsedMilliseconds + " ms");
 
