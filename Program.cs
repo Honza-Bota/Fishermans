@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 
 namespace Fishermans
 {
@@ -22,10 +23,13 @@ namespace Fishermans
             lake = new Lake(size);
 
             Console.WriteLine( lake.Fill(rnd, fishCount) );
+
+            lake.GetMap(fileName);
             lake.GetBitmap(fileName);
+
             Console.WriteLine( lake.GetPosition() );
 
-            Console.Read();
+            Console.ReadLine();
         }
     }
 
@@ -70,20 +74,21 @@ namespace Fishermans
             return new Point(0,0);
         }
 
-        public string GetMap()
+        public string GetMap(string fileName = null)
         {
-            string map = "";
+            StringBuilder map = new StringBuilder();
 
             for (int i = 0; i < Size; i++)
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    map += Fields[i, j] ? "1" : "0";
+                    map.Append(Fields[i, j] ? "1" : "0");
                 }
-                map += Environment.NewLine;
+                map.Append(Environment.NewLine);
             }
 
-            return map;
+            if (fileName != null) File.WriteAllText(fileName + ".txt", map.ToString());
+            return map.ToString();
         }
 
         public Bitmap GetBitmap(string fileName = null)
